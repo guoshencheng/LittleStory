@@ -1,1 +1,1 @@
-mongod -dbpath "./data"
+mongod -f /etc/mongodb.conf 
