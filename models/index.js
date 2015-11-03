@@ -8,6 +8,7 @@ mongoose.connect(db, {
     //process.exit(1);
 });
 
-var Story = require('./story');
-
-exports.Story = Story;
+var Story = require('./story')
+var User = require('./User')
+exports.Story = Story
+exports.User = User

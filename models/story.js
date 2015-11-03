@@ -6,5 +6,4 @@ var storySchema = mongoose.Schema({
 });
 
 var Story = mongoose.model('Story', storySchema);
-
 module.exports = Story;
