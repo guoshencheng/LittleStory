@@ -19,7 +19,7 @@ var addStory = function(req, res, next) {
         var Story = model.Story;
         var story = new Story({
             name: name,
-            src: src
+            src: "http://7u2min.com1.z0.glb.clouddn.com/" + src
         })
         story.save(function(err, data) {
             if(err) {
