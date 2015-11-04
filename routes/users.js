@@ -7,16 +7,19 @@ var signIn = function (req, res, next) {
     if (username == '' || password == '') {
         res.json({error: 'param is empty'})
     }
-    var User = model.User
-    findUser(res, username, function() {
-        if(user.password == password) {
-            var currentTime = new Date();
-            user.expireIn = currentTime.getTime() + 1000 * 60 * 10
-            saveToken(user, res)
+    findUser(res, username, function(user) {
+        if(!user) {
+            res.json({error: 'user has not register'})
         } else {
-            res.json({
-                error: 'password is not correct'
-            })
+            if(user.password == password) {
+                var currentTime = new Date();
+                user.expireIn = currentTime.getTime() + 1000 * 60 * 10
+                saveToken(user, res)
+            } else {
+                res.json({
+                    error: 'password is not correct'
+                })
+            }
         }
     })
 }
@@ -28,29 +31,31 @@ var signUp = function (req, res, next) {
         res.json({error: 'param is empty'});
     }
     var User = model.User
-    findUser(res, username, function() {
-        var currentTime = new Date();
-        var user = new User({
-            username: username,
-            password: password,
-            expireIn: (currentTime.getTime() + 1000 * 60 * 10)
-        })
-        saveToken(user, res);
+    findUser(res, username, function(buser) {
+        if(buser) {
+            res.json({error: 'has been registered'})
+        } else {
+            var currentTime = new Date();
+            var user = new User({
+                username: username,
+                password: password,
+                expireIn: (currentTime.getTime() + 1000 * 60 * 10)
+            })
+            saveToken(user, res);
+        }
     })
 }
 
 var findUser = function(res, username, callback) {
+    var User = model.User
     User.findOne({username: username}, function (error, user) {
-        if(!user) {
-            res.json({error: 'has been registered'})
-        } else {
-            callback()
-        }
+        callback(user)
     })
 }
 
 var saveToken = function(user, res) {
     user.save(function(err, u) {
+        u.token = ""
         user.token = token.encode(u);
         user.save(function(err, newU) {
             res.json({

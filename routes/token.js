@@ -3,6 +3,7 @@
  */
 var jwt = require('jsonwebtoken')
 var qiniu = require('qiniu')
+var model = require('../models');
 
 var decode = function(token) {
     return jwt.verify(token, 'hello world')
@@ -15,8 +16,14 @@ var checkToken = function(req, res, next) {
     var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers['x-access-token'];
     if(token) {
         var obj = decode(token)
-
-       next()
+        var User = model.User
+        User.findOne({username: obj.username}, function (error, user) {
+            if(user && user.password == obj.password) {
+                next()
+            } else {
+                res.json({error: 'token is not correct'})
+            }
+        })
     } else {
         res.json({error: 'please make a token first'})
     }
