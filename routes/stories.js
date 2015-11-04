@@ -15,7 +15,8 @@ var getRandom = function(req, res, next) {
     Story.find(function(error, docs) {
         var n = docs.length
         if(n > 0) {
-            var index = Math.random(n)
+            var index = n * Math.random()
+            console.log(index)
             res.json(docs[parseInt(index)])
         } else {
             res.json({story: {}})
