@@ -17,8 +17,9 @@ router.get('/user/:id', function(req, res, next) {
 router.post('/uploadToken', token.getUploadToken)
 router.post('/login', users.signIn)
 router.post('/register',users.signUp)
-router.get('/stories', stories.getAll)
+router.get('/stories', stories.getRandom)
 router.post('/stories', stories.addStory)
+router.get('/allStories', stories.getAll)
 
 module.exports = router;
 

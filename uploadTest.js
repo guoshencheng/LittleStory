@@ -5,10 +5,6 @@ var qiniu = require('qiniu')
 var fs = require('fs')
 function uploadFile(localFile, key, uptoken) {
     var extra = new qiniu.io.PutExtra();
-    //extra.params = params;
-    //extra.mimeType = mimeType;
-    //extra.crc32 = crc32;
-    //extra.checkCrc = checkCrc;
 
     qiniu.io.putFile(uptoken, key, localFile, extra, function(err, ret) {
         if(!err) {

@@ -10,6 +10,19 @@ var getAll = function (req, res, next) {
     });
 }
 
+var getRandom = function(req, res, next) {
+    var Story = model.Story;
+    Story.find(function(error, docs) {
+        var n = docs.length
+        if(n > 0) {
+            var index = Math.random(n)
+            res.json(docs[parseInt(index)])
+        } else {
+            res.json({story: {}})
+        }
+    });
+}
+
 var addStory = function(req, res, next) {
     var name = req.body.name || 'default_name';
     var src = req.body.src;
@@ -37,5 +50,6 @@ var addStory = function(req, res, next) {
 
 module.exports = {
     getAll: getAll,
-    addStory: addStory
+    addStory: addStory,
+    getRandom: getRandom
 }
