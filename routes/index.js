@@ -14,11 +14,11 @@ router.get('/error', function(req, res, next) {
 router.get('/user/:id', function(req, res, next) {
     res.json({token: ""})
 });
-router.post('/uploadToken', token.checkToken, token.getUploadToken)
+router.post('/uploadToken', token.getUploadToken)
 router.post('/login', users.signIn)
 router.post('/register',users.signUp)
-router.get('/stories', token.checkToken, stories.getRandom)
-router.post('/stories', token.checkToken, stories.addStory)
+router.get('/stories', stories.getRandom)
+router.post('/stories', stories.addStory)
 router.get('/allStories', stories.getAll)
 
 module.exports = router;

@@ -13,25 +13,30 @@ var encode = function(obj) {
 }
 
 var checkToken = function(req, res, next) {
-    var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers['x-access-token'];
-    if(token) {
-        var obj = decode(token)
-        var User = model.User
-        User.findOne({username: obj.username}, function (error, user) {
-            if(user && user.password == obj.password) {
-                var currentTime = new Date();
-                console.log(currentTime.getTime() + "    ", user.expireIn)
-                if(user.expireIn < currentTime.getTime()) {
-                    res.json({error: 'token expire in', errorCode:1122})
-                } else {
-                    next()
-                }
-            } else {
-                res.json({error: 'token is not correct'})
-            }
-        })
+    if(req.path == '/login' || req.path == '/register') {
+        next()
     } else {
-        res.json({error: 'please make a token first'})
+        var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers['x-access-token'];
+        if(token) {
+            var obj = decode(token)
+            var User = model.User
+            User.findOne({username: obj.username}, function (error, user) {
+                if(user && user.password == obj.password) {
+                    var currentTime = new Date()
+                    console.log(currentTime.getTime() + "    ", user.expireIn)
+                    if(user.expireIn < currentTime.getTime()) {
+                        //res.errorCode = 1111
+                        res.json({error: 'token expire in', errorCode:1122})
+                    } else {
+                        next()
+                    }
+                } else {
+                    res.json({error: 'token is not correct'})
+                }
+            })
+        } else {
+            res.json({error: 'please make a token first'})
+        }
     }
 }
 
