@@ -23,7 +23,6 @@ var checkToken = function(req, res, next) {
             User.findOne({username: obj.username}, function (error, user) {
                 if(user && user.password == obj.password) {
                     var currentTime = new Date()
-                    console.log(currentTime.getTime() + "    ", user.expireIn)
                     if(user.expireIn < currentTime.getTime()) {
                         res.errorCode = 1111
                     }
