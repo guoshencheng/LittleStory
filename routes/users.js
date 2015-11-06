@@ -5,20 +5,21 @@ var signIn = function (req, res, next) {
     var username = req.body.username || ''
     var password = req.body.password || ''
     if (username == '' || password == '') {
-        res.json({error: 'param is empty'})
+        res.errorCode = 1211
+        next()
     }
     findUser(res, username, function(user) {
         if(!user) {
-            res.json({error: 'user has not register'})
+            res.errorCode = 1212
+            next()
         } else {
             if(user.password == password) {
                 var currentTime = new Date();
                 user.expireIn = currentTime.getTime() + 1000 * 60 * 3
-                saveToken(user, res)
+                saveToken(user, res, next)
             } else {
-                res.json({
-                    error: 'password is not correct'
-                })
+                res.errorCode = 1213
+                next()
             }
         }
     })
@@ -28,12 +29,14 @@ var signUp = function (req, res, next) {
     var username = req.body.username || ''
     var password = req.body.password || ''
     if (username == '' || password == '') {
-        res.json({error: 'param is empty'});
+        res.errorCode = 1211
+        next()
     }
     var User = model.User
     findUser(res, username, function(buser) {
         if(buser) {
-            res.json({error: 'has been registered'})
+            res.errorCode = 1214
+            next()
         } else {
             var currentTime = new Date()
             var user = new User({
@@ -41,7 +44,7 @@ var signUp = function (req, res, next) {
                 password: password,
                 expireIn: (currentTime.getTime() + 1000 * 60 * 3)
             })
-            saveToken(user, res)
+            saveToken(user, res, next)
         }
     })
 }
@@ -53,15 +56,14 @@ var findUser = function(res, username, callback) {
     })
 }
 
-var saveToken = function(user, res) {
+var saveToken = function(user, res, next) {
     user.save(function(err, u) {
         u.token = ""
         user.token = token.encode(u);
         user.save(function(err, newU) {
-            res.json({
-                type: true,
-                data: newU
-            })
+            res.errorCode = 1000
+            res.data = newU
+            next()
         })
     })
 }

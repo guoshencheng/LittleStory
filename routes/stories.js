@@ -6,7 +6,9 @@ var model = require('../models')
 var getAll = function (req, res, next) {
     var Story = model.Story;
     Story.find(function(error, docs) {
-        res.json(docs);
+        res.errorCode = 1000
+        res.data = docs
+        next()
     });
 }
 
@@ -16,37 +18,29 @@ var getRandom = function(req, res, next) {
         var n = docs.length
         if(n > 0) {
             var index = n * Math.random()
-            console.log(index)
-            res.json(docs[parseInt(index)])
+            res.errorCode = 1000
+            res.data = docs[parseInt(index)]
         } else {
-            res.json({story: {}})
+            res.errorCode = 1000
+            res.data = {story:{}}
         }
+        next()
     });
 }
 
 var addStory = function(req, res, next) {
     var name = req.body.name || 'default_name';
     var src = req.body.src;
-    if(!name) {
-        res.json({error: 'has no name param'})
-    } else {
-        var Story = model.Story;
-        var story = new Story({
-            name: name,
-            src: "http://7u2min.com1.z0.glb.clouddn.com/" + src
-        })
-        story.save(function(err, data) {
-            if(err) {
-                res.json({
-                    error: err
-                })
-            } else {
-                res.json(
-                    data
-                )
-            }
-        })
-    }
+    var Story = model.Story;
+    var story = new Story({
+        name: name,
+        src: "http://7u2min.com1.z0.glb.clouddn.com/" + src
+    })
+    story.save(function(err, data) {
+        res.errorCode = 1000
+        res.data = data
+        next()
+    })
 }
 
 module.exports = {

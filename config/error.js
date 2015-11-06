@@ -1,4 +1,5 @@
 var error = {
+    1000: 'success',
     1111: 'token expire in',
     1112: 'token is not correct',
     1113: 'please make a token first',

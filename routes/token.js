@@ -25,18 +25,16 @@ var checkToken = function(req, res, next) {
                     var currentTime = new Date()
                     console.log(currentTime.getTime() + "    ", user.expireIn)
                     if(user.expireIn < currentTime.getTime()) {
-                        //res.errorCode = 1111
-                        res.json({error: 'token expire in', errorCode:1122})
-                    } else {
-                        next()
+                        res.errorCode = 1111
                     }
                 } else {
-                    res.json({error: 'token is not correct'})
+                    res.errorCode = 1112
                 }
             })
         } else {
-            res.json({error: 'please make a token first'})
+            res.errorCode = 1113
         }
+        next()
     }
 }
 

@@ -7,6 +7,7 @@ var bodyParser = require('body-parser')
 var routes = require('./routes')
 var token = require('./routes/token')
 var qiniu = require('qiniu')
+var config = require('./config')
 var app = express();
 
 qiniu.conf.ACCESS_KEY = 'EyEwm6Bjadr4ojSFxpKWt6k-PoyT99D5l_qMCEaL';
@@ -24,7 +25,28 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(token.checkToken)
+
+app.use(function(req, res, next) {
+    if (res.errorCode) {
+        res.json({errorCode: res.errorCode, errorMsg:config.error[res.errorCode]})
+    } else {
+        next()
+    }
+})
+
 app.use('/', routes);
+
+app.use(function(req, res, next) {
+    if (res.errorCode) {
+        if(res.data) {
+            res.json({data:res.data, errorCode: res.errorCode, errorMsg:config.error[res.errorCode]})
+        } else {
+            res.json({errorCode: res.errorCode, errorMsg:config.error[res.errorCode]})
+        }
+    } else {
+        next()
+    }
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
