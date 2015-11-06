@@ -13,7 +13,7 @@ var signIn = function (req, res, next) {
         } else {
             if(user.password == password) {
                 var currentTime = new Date();
-                user.expireIn = currentTime.getTime() + 1000 * 60 * 10
+                user.expireIn = currentTime.getTime() + 1000 * 60 * 3
                 saveToken(user, res)
             } else {
                 res.json({
@@ -35,13 +35,13 @@ var signUp = function (req, res, next) {
         if(buser) {
             res.json({error: 'has been registered'})
         } else {
-            var currentTime = new Date();
+            var currentTime = new Date()
             var user = new User({
                 username: username,
                 password: password,
-                expireIn: (currentTime.getTime() + 1000 * 60 * 10)
+                expireIn: (currentTime.getTime() + 1000 * 60 * 3)
             })
-            saveToken(user, res);
+            saveToken(user, res)
         }
     })
 }

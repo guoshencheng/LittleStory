@@ -19,7 +19,13 @@ var checkToken = function(req, res, next) {
         var User = model.User
         User.findOne({username: obj.username}, function (error, user) {
             if(user && user.password == obj.password) {
-                next()
+                var currentTime = new Date();
+                console.log(currentTime.getTime() + "    ", user.expireIn)
+                if(user.expireIn < currentTime.getTime()) {
+                    res.json({error: 'token expire in', errorCode:1122})
+                } else {
+                    next()
+                }
             } else {
                 res.json({error: 'token is not correct'})
             }
