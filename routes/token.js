@@ -52,7 +52,8 @@ var getUploadToken = function(req, res, next) {
     "\"w\":$(imageInfo.width)," +
     "\"h\":$(imageInfo.height)," +
     "\"hash\":$(etag)}"
-    res.json({uploadToken: putPolicy.token()})
+    res.errorCode = 1000
+    res.data = {uploadToken: putPolicy.token()}
 }
 
 module.exports = {

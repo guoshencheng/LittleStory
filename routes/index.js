@@ -5,7 +5,7 @@ var stories = require('./stories')
 var token = require('./token')
 
 /* GET home page. */
-router.get('/', token.checkToken,function(req, res, next) {
+router.get('/', function(req, res, next) {
     res.render('index', { title: 'Express' });
 });
 router.get('/error', function(req, res, next) {
