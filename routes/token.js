@@ -29,11 +29,12 @@ var checkToken = function(req, res, next) {
                 } else {
                     res.errorCode = 1112
                 }
+                next()
             })
         } else {
             res.errorCode = 1113
+            next()
         }
-        next()
     }
 }
 
@@ -54,6 +55,7 @@ var getUploadToken = function(req, res, next) {
     "\"hash\":$(etag)}"
     res.errorCode = 1000
     res.data = {uploadToken: putPolicy.token()}
+    next()
 }
 
 module.exports = {

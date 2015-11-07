@@ -15,7 +15,7 @@ var signIn = function (req, res, next) {
         } else {
             if(user.password == password) {
                 var currentTime = new Date();
-                user.expireIn = currentTime.getTime() + 1000 * 60 * 3
+                user.expireIn = currentTime.getTime() + 1000 * 60 * 1
                 saveToken(user, res, next)
             } else {
                 res.errorCode = 1213
@@ -42,7 +42,7 @@ var signUp = function (req, res, next) {
             var user = new User({
                 username: username,
                 password: password,
-                expireIn: (currentTime.getTime() + 1000 * 60 * 3)
+                expireIn: (currentTime.getTime() + 1000 * 60 * 1)
             })
             saveToken(user, res, next)
         }
